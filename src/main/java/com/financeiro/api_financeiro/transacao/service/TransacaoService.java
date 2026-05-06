@@ -4,6 +4,9 @@ import com.financeiro.api_financeiro.transacao.dto.TransacaoResponse;
 import com.financeiro.api_financeiro.transacao.model.TipoTransacao;
 import com.financeiro.api_financeiro.transacao.model.Transacao;
 import com.financeiro.api_financeiro.transacao.repository.TransacaoRepository;
+import com.financeiro.api_financeiro.usuario.model.Usuario;
+import com.financeiro.api_financeiro.usuario.service.UsuarioService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -12,13 +15,21 @@ import java.util.List;
 @Service
 public class TransacaoService {
     private final TransacaoRepository repository;
+    private final UsuarioService usuarioService;
 
-    public TransacaoService(TransacaoRepository repository) {
+
+
+    public TransacaoService(TransacaoRepository repository, UsuarioService usuarioService) {
         this.repository = repository;
+        this.usuarioService = usuarioService;
     }
 
     public List<TransacaoResponse> listarTodas() {
-        return repository.findAll()
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+        Usuario usuario = (Usuario) usuarioService.loadUserByUsername(email);
+        return repository.findByUsuario(usuario)
                 .stream()
                 .map(TransacaoResponse::new)
                 .toList();
@@ -34,6 +45,11 @@ public class TransacaoService {
     }
 
     public TransacaoResponse salvar(Transacao transacao) {
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+        Usuario usuario = (Usuario) usuarioService.loadUserByUsername(email);
+        transacao.setUsuario(usuario);
         return new TransacaoResponse(repository.save(transacao));
     }
 

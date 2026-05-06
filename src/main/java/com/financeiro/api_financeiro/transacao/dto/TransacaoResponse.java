@@ -7,7 +7,10 @@ import com.financeiro.api_financeiro.transacao.model.Transacao;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record TransacaoResponse(@JsonProperty("descricao")
+public record TransacaoResponse(@JsonProperty("nome")
+                                String nomeTransacao,
+
+                                @JsonProperty("descricao")
                                 String descricaoTransacao,
 
                                 @JsonProperty("valor")
@@ -20,7 +23,8 @@ public record TransacaoResponse(@JsonProperty("descricao")
                                 LocalDateTime dataTransacao) {
 
     public TransacaoResponse(Transacao transacao) {
-        this(transacao.getDescricaoTransacao(),
+        this(transacao.getUsuario().getNome(),
+                transacao.getDescricaoTransacao(),
                 transacao.getValorTransacao(),
                 transacao.getTipoTransacao(),
                 transacao.getDataTransacao());

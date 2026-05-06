@@ -1,5 +1,6 @@
 package com.financeiro.api_financeiro.transacao.model;
 
+import com.financeiro.api_financeiro.usuario.model.Usuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,8 @@ public class Transacao {
     private TipoTransacao tipoTransacao;
     private BigDecimal valorTransacao;
     private String descricaoTransacao;
+    @ManyToOne
+    private Usuario usuario;
 
 
 }

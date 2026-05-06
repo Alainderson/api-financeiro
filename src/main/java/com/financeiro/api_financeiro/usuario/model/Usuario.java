@@ -1,5 +1,6 @@
 package com.financeiro.api_financeiro.usuario.model;
 
+import com.financeiro.api_financeiro.transacao.model.Transacao;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
