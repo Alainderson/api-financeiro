@@ -1,5 +1,6 @@
 package com.financeiro.api_financeiro.transacao.controller;
 
+import com.financeiro.api_financeiro.transacao.dto.TransacaoRequest;
 import com.financeiro.api_financeiro.transacao.dto.TransacaoResponse;
 import com.financeiro.api_financeiro.transacao.model.TipoTransacao;
 import com.financeiro.api_financeiro.transacao.model.Transacao;
@@ -26,7 +27,7 @@ public class TransacaoController {
     }
 
     @PostMapping
-    public TransacaoResponse salvarItem(@RequestBody Transacao transacao){
+    public TransacaoResponse salvarItem(@RequestBody TransacaoRequest transacao){
         return transacaoService.salvar(transacao);
     }
 
@@ -38,7 +39,7 @@ public class TransacaoController {
     @PatchMapping("/{id}")
     public TransacaoResponse atualizarItem(
             @PathVariable Integer id,
-            @RequestBody Transacao transacao){
+            @RequestBody TransacaoRequest transacao){
         return transacaoService.atualizar(id, transacao);
     }
 

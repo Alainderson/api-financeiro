@@ -1,5 +1,6 @@
 package com.financeiro.api_financeiro.transacao.service;
 
+import com.financeiro.api_financeiro.transacao.dto.TransacaoRequest;
 import com.financeiro.api_financeiro.transacao.dto.TransacaoResponse;
 import com.financeiro.api_financeiro.transacao.model.TipoTransacao;
 import com.financeiro.api_financeiro.transacao.model.Transacao;
@@ -44,31 +45,37 @@ public class TransacaoService {
         repository.deleteById(id);
     }
 
-    public TransacaoResponse salvar(Transacao transacao) {
+    public TransacaoResponse salvar(TransacaoRequest request) {
+        Transacao transacao = new Transacao();
+
         String email = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getName();
         Usuario usuario = (Usuario) usuarioService.loadUserByUsername(email);
         transacao.setUsuario(usuario);
+        transacao.setDescricaoTransacao(request.descricao());
+        transacao.setValorTransacao(request.valor());
+        transacao.setDataTransacao(request.data().atStartOfDay());
+        transacao.setTipoTransacao(request.tipoTransacao());
         return new TransacaoResponse(repository.save(transacao));
     }
 
-    public TransacaoResponse atualizar(Integer id, Transacao novaTransacao) {
+    public TransacaoResponse atualizar(Integer id, TransacaoRequest request) {
 
         Transacao item = repository.findById(id).orElseThrow(() -> new RuntimeException("Transacao nao encontrada"));
 
         //DESCRICAO
-        if (novaTransacao.getDescricaoTransacao() != null) {
-            item.setDescricaoTransacao(novaTransacao.getDescricaoTransacao());
+        if (request.descricao() != null) {
+            item.setDescricaoTransacao(request.descricao());
         }
         //VALOR
-        if (novaTransacao.getValorTransacao() != null) {
-            item.setValorTransacao(novaTransacao.getValorTransacao());
+        if (request.valor() != null) {
+            item.setValorTransacao(request.valor());
         }
 
         //TIPO
-        if (novaTransacao.getTipoTransacao() != null) {
-            item.setTipoTransacao(novaTransacao.getTipoTransacao());
+        if (request.tipoTransacao() != null) {
+            item.setTipoTransacao(request.tipoTransacao());
         }
 
 
